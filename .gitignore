@@ -1,0 +1,8 @@
+fairseq
+**/.ipynb_checkpoints
+wavprompt/utils
+wavprompt/nodelist.$
+wavprompt/outputs
+wavprompt/logs
+wavprompt/manifest
+wavprompt/models

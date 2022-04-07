@@ -1,0 +1,79 @@
+# @package _group_
+
+common:
+  fp16: true
+  log_format: json
+  log_interval: 200
+
+checkpoint:
+  save_interval: 1000
+  save_interval_updates: 500
+  keep_interval_updates: 1
+  keep_best_checkpoints: 1
+  no_epoch_checkpoints: true
+  best_checkpoint_metric: loss
+
+task:
+  _name: wavprompt_pretraining
+  data: ???
+  normalize: false
+  labels: ltr
+  autoregressive: true
+  eval_wer: true
+  gpt_path: ???
+  debug: false
+  gpt_type: gpt2
+  max_sample_size: 320000
+
+dataset:
+  num_workers: 6
+  max_tokens: 1280000
+  skip_invalid_size_inputs_valid_test: true
+  validate_after_updates: 1000
+  validate_interval: 1000
+  valid_subset: dev
+
+distributed_training:
+  ddp_backend: no_c10d
+  distributed_world_size: 1
+
+criterion:
+  _name: cross_entropy_with_acc
+
+optimization:
+  max_update: 100000
+  lr: [0.0002]
+  sentence_avg: true
+  update_freq: [10]
+
+optimizer:
+  _name: adam
+  adam_betas: (0.9,0.98)
+  adam_eps: 1e-08
+
+lr_scheduler:
+  _name: tri_stage
+  phase_ratio: [0.1, 0.4, 0.5]
+  final_lr_scale: 0.05
+
+model:
+  _name: wavprompt
+  w2v_path: ???
+  apply_mask: true
+  mask_prob: 0.65
+  mask_channel_prob: 0.25
+  mask_channel_length: 64
+  layerdrop: 0.1
+  activation_dropout: 0.1
+  feature_grad_mult: 0.0
+  freeze_finetune_updates: 0
+  gpt_path: ???
+  gpt_type: gpt2
+  fix_encoder: false
+  fix_decoder: true
+  fix_conv_encoder: false
+  prompt: "what did the speaker say? "
+  reduction_factor: ???
+  decoder_embed_dim: 768
+  n_token: ???
+  temp: (2.0,0.5,0.999995)
