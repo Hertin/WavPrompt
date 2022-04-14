@@ -96,7 +96,7 @@ output_folder="${eval_folder}/${model_key_s}_${dataset}"
 ckpt_path_template="outputs/${model_key_s}rf{v}${model_key_e}/checkpoint.best_loss_*.pt"
 splits=("test_black_white" "test_dark_light" "test_man_woman" "test_male_female")
 prompts=("the speaker is describing a person in" "the speaker is describing a person in" "the speaker is describing a" "the speaker is describing a")
-ckpt_path_variables=(8)
+ckpt_path_variables=(2 4 8 16)
 
 # stage=110
 # dataset=fluent
