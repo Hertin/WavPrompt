@@ -6,3 +6,4 @@ wavprompt/outputs
 wavprompt/logs
 wavprompt/manifest
 wavprompt/models
+wavprompt/evaluation

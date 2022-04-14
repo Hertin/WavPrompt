@@ -22,8 +22,10 @@ from .. import utils
 from ..logging import metrics
 
 import pickle
+import joblib
 import numpy as np
 from fairseq.models.transformer_lm import TransformerLanguageModel
+from transformers import GPT2Tokenizer, GPT2Config
 
 logger = logging.getLogger(__name__)
 
@@ -107,7 +109,7 @@ class WavPromptConfig(FairseqDataclass):
     )
 
 @register_task("wavprompt_pretraining", dataclass=WavPromptConfig)
-class WavPrompt_Pretraining(FairseqTask):
+class WavPromptPretraining(FairseqTask):
     def __init__(
         self,
         cfg: WavPromptConfig,
@@ -117,8 +119,7 @@ class WavPrompt_Pretraining(FairseqTask):
             assert cfg.labels is not None, "eval_wer can only be set during fine-tuning"
         self.blank_symbol = "<s>"
         
-        from transformers import GPT2Tokenizer, GPT2Config
-        import joblib
+        
         # self.gpt_tokenizer = GPT2Tokenizer.from_pretrained(pretrained_model_name_or_path=cfg.gpt_type, cache_dir=cfg.gpt_path)
         # 0:'!', 1:'"', 2:'#' 3:'$'
         if os.path.isfile(f'{cfg.gpt_path}/{cfg.gpt_type}_tok.pk'):

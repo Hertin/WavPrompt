@@ -3,17 +3,12 @@
 source $(dirname ${CONDA_EXE})/../etc/profile.d/conda.sh
 conda activate wavprompt # change it to your conda environment
 
-stage=0        # start from 0 if you need to start from data preparation
+stage=0 # start from 0 if you need to start from data preparation
 stop_stage=100
-exp_dir=
-manifest_path="$(pwd)/manifest/librispeech_sudo" # path to save manifest
+manifest_path= # path to save manifest
 config_name=
 subset=
-wav2vec_weight=1.
-wav2bert_weight=0.
-checkpoint_name=
-save_dir=checkpoints
-subset_dir=
+save_dir=
 n_token=
 reduction_factor=
 freeze_finetune_updates=0
@@ -22,19 +17,14 @@ output_folder=
 ckpt_path_template=
 split=
 prompt=
-qprompt=
 manifest_dir=
 ckpt_path_variable=
-animal=
-learning_rate=
+transcript_folder=
 . utils/parse_options.sh || exit 1; # kaldi script to parse command line options
 
 set -e
 set -u
 set -o pipefail
-
-
-librispeech_path="/nobackup/users/heting/dataset/LibriSpeech"
 
 if [ ${stage} -le 10 ] && [ ${stop_stage} -ge 10 ]; then
     echo "Stage 10: Training Fairseq Model (${manifest_path}) (${config_name})"
@@ -61,24 +51,34 @@ if [ ${stage} -le 10 ] && [ ${stop_stage} -ge 10 ]; then
 fi
 
 if [ ${stage} -le 100 ] && [ ${stop_stage} -ge 100 ]; then
-    echo "Stage 160: Evaluating Fairseq Model of WAV2Prompt on ${manifest_dir}"
+    echo "Stage 100: Generating transcript for WAV2Prompt on ${manifest_dir}"
     echo """
     python -u wavprompt_generate.py \
         --manifest-dir "${manifest_dir}" --split "${split}" \
         --all-scenarios ${all_scenarios} \
         --ckpt-path-template ${ckpt_path_template} \
-        --ckpt-path-variable ${ckpt_path_variable} 
+        --ckpt-path-variable ${ckpt_path_variable} --max-batch 1000 --transcript-folder ${transcript_folder}
     """
     python -u scripts/wavprompt_generate.py \
         --manifest-dir "${manifest_dir}" --split "${split}" \
         --all-scenarios ${all_scenarios} \
         --ckpt-path-template ${ckpt_path_template} \
-        --ckpt-path-variable ${ckpt_path_variable} --max-batch 1000
+        --ckpt-path-variable ${ckpt_path_variable} --max-batch 1000 --transcript-folder ${transcript_folder}
+
 fi
 
 if [ ${stage} -le 110 ] && [ ${stop_stage} -ge 110 ]; then
     echo "Stage 110: Evaluating Fairseq Model of WAV2GPT2 on ${manifest_dir}"
-
+    echo """
+    python -u scripts/wavprompt_eval.py \
+        --manifest-dir "${manifest_dir}" --split "${split}" \
+        --all-scenarios ${all_scenarios} \
+        --prompt "${prompt}" \
+        --output-folder ${output_folder} \
+        --exp "base" "txt" --suffix "rf" \
+        --ckpt-path-template ${ckpt_path_template} \
+        --ckpt-path-variable ${ckpt_path_variable} \
+        --max-batch 250"""
     python -u scripts/wavprompt_eval.py \
         --manifest-dir "${manifest_dir}" --split "${split}" \
         --all-scenarios ${all_scenarios} \

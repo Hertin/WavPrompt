@@ -1,6 +1,6 @@
 #!/bin/bash
 
-stage=0
+stage=2
 stop_stage=2
 
 PYTHON_ENVIRONMENT=wavprompt
@@ -54,6 +54,8 @@ if [ $stage -le 1 ] && [ $stop_stage -ge 1 ]; then
     python -m pip install transformers==4.9.1
     python -m pip install tensorboardX
     python -m pip install editdistance
+    python -m pip install easydict
+    python -m pip install pandas
     cd ${cwd}
 fi
 
@@ -64,13 +66,16 @@ if [ $stage -le 2 ] && [ $stop_stage -ge 2 ]; then
     cp ${CODE}/criterions/cross_entropy_with_accuracy.py ${FAIRSEQ}/criterions
     
     cp ${CODE}/data/add_target_dataset_wavprompt.py ${FAIRSEQ}/data
-    if [ -f ${FAIRSEQ}/data/__init__.py ] && [ $(cat ${FAIRSEQ}/data/__init__.py | grep "$(cat ${CODE}/data/__init__.py)" | wc -l) = 0 ]; then
-        cat ${CODE}/data/__init__.py >> ${FAIRSEQ}/data/__init__.py
+    cp ${CODE}/data/add_target_dataset_wavprompt_evaluation.py ${FAIRSEQ}/data
+    cp ${CODE}/data/audio/file_audio_label_dataset.py ${FAIRSEQ}/data/audio
+    if [ -f ${FAIRSEQ}/data/__init__.py ] && [ $(cat ${FAIRSEQ}/data/__init__.py | grep """$(cat ${CODE}/data/__init__.py)""" | wc -l) != $(cat ${CODE}/data/__init__.py | wc -l) ]; then
+        (echo ""; cat ${CODE}/data/__init__.py) >> ${FAIRSEQ}/data/__init__.py
     fi
-    
+
     cp -r ${CODE}/models/wavprompt ${FAIRSEQ}/models
     
     cp ${CODE}/tasks/wavprompt_pretraining.py ${FAIRSEQ}/tasks
+    cp ${CODE}/tasks/wavprompt_evaluation.py ${FAIRSEQ}/tasks
     
 fi
 
