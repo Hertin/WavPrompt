@@ -13,6 +13,8 @@
 #SBATCH --cpus-per-task=16
 #SBATCH --mem=0
 
+mkdir -p logs
+
 ## User python environment
 PYTHON_VIRTUAL_ENVIRONMENT=wavprompt
 CONDA_ROOT=/nobackup/users/$(whoami)/espnet/tools/conda

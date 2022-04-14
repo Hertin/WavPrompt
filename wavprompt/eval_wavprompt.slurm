@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH -J evalwav2gpt2
-#SBATCH -o evalwav2gpt2_%j.out
-#SBATCH -e evalwav2gpt2_%j.err
+#SBATCH -o logs/evalwav2gpt2_%j.out
+#SBATCH -e logs/evalwav2gpt2_%j.err
 #SBATCH --mail-user=heting@mit.edu
 #SBATCH --mail-type=ALL
 #SBATCH --gres=gpu:4
@@ -13,6 +13,7 @@
 #SBATCH --cpus-per-task=16
 #SBATCH --mem=0
 
+mkdir -p logs
 
 ## User python environment
 PYTHON_VIRTUAL_ENVIRONMENT=wavprompt
@@ -24,7 +25,7 @@ conda activate $PYTHON_VIRTUAL_ENVIRONMENT
 
 RUN_CMD=$1
 CMD="srun --ntasks=1 --exclusive --gres=gpu:1 --mem=200G -c 16"
-if [ ${RUN_CMD} = "bash" ]; then
+if [ "${RUN_CMD}" = "bash" ]; then
     CMD=""
     PARALLEL="false"
     echo "PARALLEL: ${PARALLEL}"
@@ -157,16 +158,14 @@ for ckpt_path_variable in  "${ckpt_path_variables[@]}"; do
         hyp_split=${scena}
         echo $all_scena $split $prompt ${ckpt_path_template} model_key: ${model_key}
 
-        if [ ${PARALLEL} = "true" ]; then
+        if [ "${PARALLEL}" = "true" ]; then
             echo evaluate parallelly echo ${PARALLEL}
-            (eval ${manifest_dir} ${split} ${all_scena} ${ckpt_path_template} ${ckpt_path_variable} ${stage} ${output_folder} ${prompt} ${scena} ${hyp_manifest_dir} ${transcript_folder}) &
+            (eval "${manifest_dir}" "${split}" "${all_scena}" "${ckpt_path_template}" "${ckpt_path_variable}" "${stage}" "${output_folder}" "${prompt}" "${hyp_manifest_dir}") &
             pids+=($!)
         else
             eval "${manifest_dir}" "${split}" "${all_scena}" "${ckpt_path_template}" "${ckpt_path_variable}" "${stage}" "${output_folder}" "${prompt}" "${hyp_manifest_dir}"
         fi
-        break
     done
-    break
 done
 
 
