@@ -1,5 +1,5 @@
 # WavPrompt
-<div align="left"><img src="images/train.wavprompt.drawio.png" width="49%" height="300"/><img src="images/eval.wavprompt.drawio.png" width="48%" height="300"/></div>
+<div align="left"><img src="images/train.wavprompt.drawio.png" width="50%"/><img src="images/eval.wavprompt.drawio.png" width="50%"/></div>
 WavPrompt is speech understanding framework that leveraging the few-shot learning ablitiy of a large-scale pretrained language model to perform speech understanding tasks.
 
 ### Download datasets
