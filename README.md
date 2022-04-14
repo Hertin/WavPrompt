@@ -11,20 +11,20 @@ WavPrompt is speech understanding framework that leveraging the few-shot learnin
 * [ESC-50](https://github.com/karolpiczak/ESC-50)
 
 ### Prepare manifest of the dataset
-* Use the scripts in [wav2vec](https://github.com/pytorch/fairseq/tree/main/examples/wav2vec) repository to generate manifest files (.tsv and .ltr) for LibriSpeech.
-* The manifest of other datasets follows the similar format as that of the Librispeech. 
-  * The .tsv file contains one extra column for class labels
+Use the scripts in [wav2vec](https://github.com/pytorch/fairseq/tree/main/examples/wav2vec) repository to generate manifest files (.tsv and .ltr) for LibriSpeech.
+The manifest of other datasets follows the similar format as that of the Librispeech. 
+The .tsv file contains one extra column for class labels
 ``` text
 <root directory>
 <relative path> <number of frames of the audio> <class label>
 <relative path> <number of frames of the audio> <class label>
 ```
-  * The .ltr file contains columns for class labels, prompts and transcriptions
+
+The .ltr file contains columns for class labels, prompts and transcriptions
 ``` text
 <class label> <prompt> <transcription>
 <class label> <prompt> <transcription>
 ```
-
 
 ### Setup conda environment, fairseq and WavPrompt code:
 ``` bash
