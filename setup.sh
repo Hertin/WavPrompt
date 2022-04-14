@@ -1,7 +1,7 @@
 #!/bin/bash
 
-stage=2
-stop_stage=2
+stage=0
+stop_stage=3
 
 PYTHON_ENVIRONMENT=wavprompt
 CONDA_ROOT=/nobackup/users/$(whoami)/espnet/tools/conda # change it to your conda root
