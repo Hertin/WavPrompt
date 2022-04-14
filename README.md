@@ -60,7 +60,7 @@ Or  submit the evaluation slurm job:
 sbatch eval_wavprompt.slurm
 ```
 If you find this project useful, please consider citing this work.
-```
+``` bibtex
 @article{gao2022wavprompt,
   title={WAVPROMPT: Towards Few-Shot Spoken Language Understanding with Frozen Language Models},
   author={Gao, Heting and Ni, Junrui and Qian, Kaizhi and Zhang, Yang and Chang, Shiyu and Hasegawa-Johnson, Mark},
