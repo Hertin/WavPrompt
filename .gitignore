@@ -7,3 +7,5 @@ wavprompt/logs
 wavprompt/manifest
 wavprompt/models
 wavprompt/evaluation
+**.out
+**.err
